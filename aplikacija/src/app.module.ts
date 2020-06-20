@@ -26,6 +26,8 @@ import { OrderService } from './services/order/order.service';
 import { ArticlePrice } from 'entities/article-price.entity';
 import { AuthController } from './controllers/api/auth.controller';
 import { AuthMiddleWare } from './middlewares/auth.middleware';
+import { PhotoService } from './services/photo/photo.service';
+import { Photo } from 'entities/photo.entity';
 
 
 
@@ -51,6 +53,7 @@ import { AuthMiddleWare } from './middlewares/auth.middleware';
          User,
          ArticlePrice,
          ArticleFeature,
+         Photo,
          
         ]
     }),
@@ -65,6 +68,7 @@ import { AuthMiddleWare } from './middlewares/auth.middleware';
       CartArticle,
       Order,
       ArticlePrice,
+      Photo,
       
   
     
@@ -87,6 +91,7 @@ import { AuthMiddleWare } from './middlewares/auth.middleware';
     UserService,
     CartService,
     OrderService,
+    PhotoService,
 
    
   ],
