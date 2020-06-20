@@ -31,9 +31,6 @@ export class Article {
   @Column("text", { name: "description" })
   description: string;
 
-  @Column("varchar", { name: "image_path", length: 128 })
-  imagePath: string;
-
   @Column("double", { name: "price"})
   ArticlePrice: Double;
 

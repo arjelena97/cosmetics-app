@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, UseInterceptors, UploadedFile } from "@nestjs/common";
+import { Controller, Post, Body, Param, UseInterceptors, UploadedFile, Req } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
 import { ArticleService } from "src/services/article/article.service";
 import { Article } from "entities/article.entity";
@@ -9,6 +9,9 @@ import { diskStorage } from "multer";
 import { PhotoService } from "src/services/photo/photo.service";
 import { Photo } from "entities/photo.entity";
 import { ApiResponse } from "src/misc/api.response.class";
+import * as fileType from 'file-type';
+import * as fs from 'fs';
+import * as sharp from 'sharp';
 
 @Controller('api/article')
 @Crud({
@@ -96,8 +99,31 @@ export class ArticleController {
 
         })
     )
-   async uploadPhoto(@Param('id') articleId: number, @UploadedFile() photo): Promise<ApiResponse | Photo >{
+   async uploadPhoto(
+        @Param('id') articleId: number,
+        @UploadedFile() photo, 
+        @Req() req): Promise<ApiResponse | Photo >{
+            
+        if (req.fileFilterError) {
+                return new ApiResponse('error', -4002, req.fileFilterError);
+        }
     
+        if (!photo) {
+                return new ApiResponse('error', -4002, 'File not uploaded!');
+        }
+
+        const fileTypeResult = await fileType.fromFile(photo.path);
+        if (!fileTypeResult) {
+            fs.unlinkSync(photo.path);
+            return new ApiResponse('error', -4002, 'Cannot detect file type!');
+        }
+
+        const realMimeType = fileTypeResult.mime;
+        if (!(realMimeType.includes('jpeg') || realMimeType.includes('png'))) {
+            fs.unlinkSync(photo.path);
+            return new ApiResponse('error', -4002, 'Bad file content type!');
+        }
+
         const newPhoto: Photo = new Photo();
         newPhoto.articleId = articleId;
         newPhoto.imagePath = photo.filename;
@@ -107,6 +133,40 @@ export class ArticleController {
         if (!savedPhoto){
             return new ApiResponse('error', -4001);
         }
+
+        return savedPhoto;
     }
+
+    async createThumb(photo) {
+        const originalFilePath = photo.path;
+        const fileName = photo.filename;
+
+        const destinationFilePath = StorageConfig.photoDestination + "thumb/" + fileName;
+
+        await sharp(originalFilePath)
+        .resize({
+            fit: 'cover',
+            width: StorageConfig.photoThumbSize.width,
+            height: StorageConfig.photoThumbSize.height,
+        })
+        .toFile(destinationFilePath);
+       
+}
+
+async createSmall(photo) {
+    const originalFilePath = photo.path;
+    const fileName = photo.filename;
+
+    const destinationFilePath = StorageConfig.photoDestination + "small/" + fileName;
+
+    await sharp(originalFilePath)
+    .resize({
+        fit: 'cover',
+        width: StorageConfig.photoSmallSize.width,
+        height: StorageConfig.photoSmallSize.height,
+    })
+    .toFile(destinationFilePath);
+   
+}
 
 }
