@@ -25,9 +25,10 @@ import { CartService } from './services/cart/cart.service';
 import { OrderService } from './services/order/order.service';
 import { ArticlePrice } from 'src/entities/article-price.entity';
 import { AuthController } from './controllers/api/auth.controller';
-import { AuthMiddleWare } from './middlewares/auth.middleware';
+
 import { PhotoService } from './services/photo/photo.service';
 import { Photo } from 'src/entities/photo.entity';
+import { AuthMiddleware } from './middlewares/auth.middleware';
 
 
 
@@ -98,13 +99,14 @@ import { Photo } from 'src/entities/photo.entity';
   exports: [
       AdministratorService,
       UserService,
+
   ]
 })
 
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(AuthMiddleWare)
+      .apply(AuthMiddleware)
       .exclude('auth/*')
       .forRoutes('api/*');
   }

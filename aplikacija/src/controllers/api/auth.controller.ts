@@ -15,7 +15,7 @@ export class AuthController {
     constructor(public administratorService: AdministratorService){}
        
         @Post('login')
-        async doLogin(@Body() data: LoginAdministratorDto, @Req() req: Request): Promise<ApiResponse> {
+        async doLogin(@Body() data: LoginAdministratorDto, @Req() req: Request): Promise<ApiResponse | LoginInfoAdministratorDto> {
             const administrator = await this.administratorService.getByUsername(data.username)
         
             if (!administrator){
@@ -35,7 +35,6 @@ export class AuthController {
         const jwtData = new JwtDataAdministratorDto();
             jwtData.administratorId = administrator.administratorId;
             jwtData.username = administrator.username;
-
             let sada = new Date();
             sada.setDate(sada.getDate() + 14);
             const istekTimestamp = sada.getTime() / 1000;
@@ -50,8 +49,13 @@ export class AuthController {
             const responseObject = new LoginInfoAdministratorDto(
                 administrator.administratorId,
                 administrator.username,
-                token
-            )
+                token,
+            ); 
+ 
+            return new Promise(resolve => resolve(responseObject));
+
+
+            
     }
 }
 

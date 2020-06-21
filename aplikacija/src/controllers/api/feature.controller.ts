@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Param } from "@nestjs/common";
+import { Controller } from "@nestjs/common";
 import { Crud, Feature } from "@nestjsx/crud";
 import { FeatureService } from "src/services/feature/feature.service";
 
