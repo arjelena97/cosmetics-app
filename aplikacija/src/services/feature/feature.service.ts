@@ -3,8 +3,8 @@ import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { Feature } from "entities/feature.entity";
-import { ArticleFeature } from "entities/article-feature.entity";
+import { Feature } from "src/entities/feature.entity";
+import { ArticleFeature } from "src/entities/article-feature.entity";
 
 
 @Injectable()

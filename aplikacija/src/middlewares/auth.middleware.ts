@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { AdministratorService } from "src/services/administrator/administrator.service";
 import { JwtDataAdministratorDto } from "src/dtos/administrator/jwt.data.administrator.dto";
 import * as jwt from 'jsonwebtoken';
+import { jwtSecret } from "config/jwt.secret";
 
 @Injectable()
 export class AuthMiddleWare implements NestMiddleware {
@@ -23,7 +24,15 @@ export class AuthMiddleWare implements NestMiddleware {
             }
             const tokenString = tokenParts[1];
 
-            const jwtData: JwtDataAdministratorDto = jwt.verify()
+            let jwtData: JwtDataAdministratorDto;
+
+            try {
+                jwtData = jwt.verify(tokenString, jwtSecret);
+            } catch(e) {
+                throw new HttpException('Bad token found', HttpStatus.UNAUTHORIZED);
+            }
+            
+
             if (!jwtData){
                 throw new HttpException('Bad token found', HttpStatus.UNAUTHORIZED);
             }
@@ -45,7 +54,7 @@ export class AuthMiddleWare implements NestMiddleware {
 
             const trenutniTimestamp = new Date().getTime() / 1000;
            
-            if (trenutniTimestamp >= jwtData.ext) {
+            if (trenutniTimestamp >= jwtData.exp) {
                 throw new HttpException('Token has expired', HttpStatus.UNAUTHORIZED);
             }
 
