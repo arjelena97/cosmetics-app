@@ -1,7 +1,9 @@
-import { Controller } from "@nestjs/common";
+import { Controller, UseGuards } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
 import { Category } from "src/entities/category.entity";
 import { CategoryService } from "src/services/category/category.service";
+import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
+import { RoleCheckerGuard } from "src/misc/role.checker.guard";
 
 @Controller('api/category')
 @Crud({
@@ -28,7 +30,46 @@ import { CategoryService } from "src/services/category/category.service";
                 eager: false
             }
         }
-    }
+    },
+    routes: {
+        only: [
+            "createOneBase",
+            "createManyBase",
+            "updateOneBase",
+            "getOneBase",
+            "getManyBase",
+        ],
+        createOneBase: {
+            decorators: [
+                UseGuards(RoleCheckerGuard),
+                AllowToRoles('administrator'),
+            ],
+        },
+        createManyBase: {
+            decorators: [
+                UseGuards(RoleCheckerGuard),
+                AllowToRoles('administrator'),
+            ],
+        },
+        updateOneBase:{
+            decorators: [
+                UseGuards(RoleCheckerGuard),
+                AllowToRoles('administrator'),
+            ],
+        },
+        getOneBase: {
+            decorators: [
+                UseGuards(RoleCheckerGuard),
+                AllowToRoles('administrator', 'user'),
+            ],
+        },
+        getManyBase: {
+            decorators: [
+                UseGuards(RoleCheckerGuard),
+                AllowToRoles('administrator', 'user'),
+            ],
+        }
+        }
 })
 export class CategoryController {
 
