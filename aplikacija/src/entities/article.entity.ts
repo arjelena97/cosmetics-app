@@ -32,7 +32,7 @@ export class Article {
   description: string;
 
   @Column("double", { name: "price"})
-  ArticlePrice: Double;
+  price: Double;
 
   @OneToMany(() => ArticleFeature, (articleFeature) => articleFeature.article)
   articleFeatures: ArticleFeature[];

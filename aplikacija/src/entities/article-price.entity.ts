@@ -35,7 +35,7 @@ import {
       allowNaN: false,
       maxDecimalPlaces: 2,
     })
-    ArticlePrice: number;
+    price: number;
     
     @ManyToOne(
       () => Article,

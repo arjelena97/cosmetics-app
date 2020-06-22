@@ -34,7 +34,7 @@ export class User {
   lastName: string;
 
   @Column("tinytext", { name: "postal_adress" })
-  postalAdress: string;
+  postalAddress: string;
 
   @Column("varchar", {
     name: "phone_number",

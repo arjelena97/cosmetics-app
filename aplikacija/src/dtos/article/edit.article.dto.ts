@@ -1,6 +1,4 @@
-
-
-export class AddArticleDto { 
+export class EditArticleDto { 
     name: string;
     categoryId: number;
     description: string;
@@ -8,8 +6,5 @@ export class AddArticleDto {
     features: {
         featureId: number;
         value: string;
-    }[];
+    }[] | null;
 }
-
-
-
