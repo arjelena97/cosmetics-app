@@ -7,6 +7,7 @@ import { UserRegistrationDto } from "src/dtos/user/user.registration.dto";
 import { ApiResponse } from "src/misc/api.response.class";
 import * as crypto from 'crypto';
 
+
 @Injectable()
 export class UserService extends TypeOrmCrudService<User> {
     constructor(
@@ -42,4 +43,20 @@ export class UserService extends TypeOrmCrudService<User> {
         }
     }
 
+    async getById(id) {
+        return await this.user.findOne(id);
+    }
+
+    async getByEmail(email: string): Promise<User | null> {
+        const user = await this.user.findOne({
+           email: email
+        });
+
+        if (user) {
+           return user;
+        }
+
+        return null;
+
+     }
 }
