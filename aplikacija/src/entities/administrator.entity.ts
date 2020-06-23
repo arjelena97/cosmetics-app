@@ -1,4 +1,6 @@
 import {  PrimaryGeneratedColumn, Column, Entity } from "typeorm";
+import * as Validator from "class-validator";
+
 
 @Entity()
 export class Administrator {
@@ -6,6 +8,8 @@ export class Administrator {
     administratorId: number;
 
     @Column({ type: 'varchar', length: '32', unique:true })
+    @Validator.IsString()
+    @Validator.Matches(/^[a-z][a-z0-9\.]{3,30}[a-z0-9]$/)
     username: string;
 
     @Column({ name: 'password_hash', type: 'varchar', length: '128'})
