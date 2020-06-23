@@ -17,7 +17,7 @@ export class AuthController {
 
     constructor(
         public administratorService: AdministratorService,
-        public userService: UserService
+        public userService: UserService,
         
         ){ }
 
