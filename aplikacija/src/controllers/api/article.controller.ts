@@ -13,7 +13,7 @@ import * as fileType from 'file-type';
 import * as fs from 'fs';
 import * as sharp from 'sharp';
 import { EditArticleDto } from "src/dtos/article/edit.article.dto";
-import { RoleCheckerGuard } from "src/misc/role.checker.guard";
+import { RoleCheckedGuard } from "src/misc/role.checked.guard";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
 
 @Controller('api/article')
@@ -42,13 +42,13 @@ import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
         ],
         getOneBase: {
             decorators: [
-                UseGuards(RoleCheckerGuard),
+                UseGuards(RoleCheckedGuard),
                 AllowToRoles('administrator', 'user')
             ],
         },
         getManyBase: {
             decorators: [
-                UseGuards(RoleCheckerGuard),
+                UseGuards(RoleCheckedGuard),
                 AllowToRoles('administrator', 'user')
             ],
         }
@@ -62,14 +62,14 @@ export class ArticleController {
     ) { }
 
     @Post() 
-    @UseGuards(RoleCheckerGuard)
+    @UseGuards(RoleCheckedGuard)
     @AllowToRoles('administrator')
     createFullArticle(@Body() data: AddArticleDto) {
         return this.service.createFullArticle(data);
     }
 
     @Patch(':id')
-    @UseGuards(RoleCheckerGuard)
+    @UseGuards(RoleCheckedGuard)
     @AllowToRoles('administrator')
     editFullArticle(@Param('id') id: number, @Body() data: EditArticleDto ) {
         return this.service.editFullArticle(id, data);
@@ -77,7 +77,7 @@ export class ArticleController {
 
 
     @Post(':id/uploadPhoto/') 
-    @UseGuards(RoleCheckerGuard)
+    @UseGuards(RoleCheckedGuard)
     @AllowToRoles('administrator')
     @UseInterceptors(
         FileInterceptor('photo', {
@@ -188,7 +188,7 @@ export class ArticleController {
 
     
     @Delete(':articleId/deletePhoto/:photoId')
-    @UseGuards(RoleCheckerGuard)
+    @UseGuards(RoleCheckedGuard)
     @AllowToRoles('administrator')
     public async deletePhoto(
         @Param('articleId') articleId: number,

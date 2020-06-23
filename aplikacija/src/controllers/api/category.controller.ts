@@ -3,7 +3,7 @@ import { Crud } from "@nestjsx/crud";
 import { Category } from "src/entities/category.entity";
 import { CategoryService } from "src/services/category/category.service";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
-import { RoleCheckerGuard } from "src/misc/role.checker.guard";
+import { RoleCheckedGuard } from "src/misc/role.checked.guard";
 
 @Controller('api/category')
 @Crud({
@@ -41,31 +41,31 @@ import { RoleCheckerGuard } from "src/misc/role.checker.guard";
         ],
         createOneBase: {
             decorators: [
-                UseGuards(RoleCheckerGuard),
+                UseGuards(RoleCheckedGuard),
                 AllowToRoles('administrator'),
             ],
         },
         createManyBase: {
             decorators: [
-                UseGuards(RoleCheckerGuard),
+                UseGuards(RoleCheckedGuard),
                 AllowToRoles('administrator'),
             ],
         },
         updateOneBase:{
             decorators: [
-                UseGuards(RoleCheckerGuard),
+                UseGuards(RoleCheckedGuard),
                 AllowToRoles('administrator'),
             ],
         },
         getOneBase: {
             decorators: [
-                UseGuards(RoleCheckerGuard),
+                UseGuards(RoleCheckedGuard),
                 AllowToRoles('administrator', 'user'),
             ],
         },
         getManyBase: {
             decorators: [
-                UseGuards(RoleCheckerGuard),
+                UseGuards(RoleCheckedGuard),
                 AllowToRoles('administrator', 'user'),
             ],
         }

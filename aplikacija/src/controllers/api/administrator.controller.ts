@@ -5,7 +5,7 @@ import { AddAdministratorDto } from "src/dtos/administrator/add.administrator.dt
 import { EditAdministratorDto } from "src/dtos/administrator/edit.administrator.dto";
 import { ApiResponse } from "src/misc/api.response.class";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
-import { RoleCheckerGuard } from "src/misc/role.checker.guard";
+import { RoleCheckedGuard } from "src/misc/role.checked.guard";
 
 
 @Controller('api/administrator')
@@ -15,14 +15,14 @@ export class AdministratorController {
     ) { }
 
     @Get() 
-    @UseGuards(RoleCheckerGuard)
+    @UseGuards(RoleCheckedGuard)
     @AllowToRoles('administrator')
     getAll(): Promise<Administrator[]>{
      return this.administratorService.getAll();
     }
 
     @Get(':id') 
-    @UseGuards(RoleCheckerGuard)
+    @UseGuards(RoleCheckedGuard)
     @AllowToRoles('administrator')
     getById( @Param('id') administratorId: number): Promise<Administrator | ApiResponse>{
      return new Promise(async(resolve) => {
@@ -38,14 +38,14 @@ export class AdministratorController {
     }
 
     @Post()
-    @UseGuards(RoleCheckerGuard)
+    @UseGuards(RoleCheckedGuard)
     @AllowToRoles('administrator')
     add( @Body() data: AddAdministratorDto ): Promise<Administrator | ApiResponse> {
         return this.administratorService.add(data);
     }
 
     @Patch(':id')
-    @UseGuards(RoleCheckerGuard)
+    @UseGuards(RoleCheckedGuard)
     @AllowToRoles('administrator')
     edit( @Param('id') id: number, @Body() data: EditAdministratorDto): Promise<Administrator | ApiResponse> {
         return this.administratorService.editById(id, data);
