@@ -14,6 +14,7 @@ import { ArticleFeature } from "./article-feature.entity";
 import { Category } from "./category.entity";
 import { CartArticle } from "./cart-article.entity";
 import { Feature } from "./feature.entity";
+import * as Validator  from "class-validator";
 
 @Index("fk_article_category_id", ["categoryId"], {})
 @Entity("article")
@@ -23,12 +24,18 @@ export class Article {
   articleId: number;
 
   @Column("varchar", { name: "name", length: 128 })
+  @Validator.IsNotEmpty()
+  @Validator.IsString()
+  @Validator.Length(5, 128)
   name: string;
 
   @Column("int", { name: "category_id", unsigned: true})
   categoryId: number;
 
   @Column("text", { name: "description" })
+  @Validator.IsNotEmpty()
+  @Validator.IsString()
+  @Validator.Length(64, 10000)
   description: string;
 
   @Column("double", { name: "price"})
