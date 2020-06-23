@@ -29,6 +29,7 @@ import { AuthController } from './controllers/api/auth.controller';
 import { PhotoService } from './services/photo/photo.service';
 import { Photo } from 'src/entities/photo.entity';
 import { AuthMiddleware } from './middlewares/auth.middleware';
+import { UserCartController } from './controllers/api/user.cart.controller';
 
 
 
@@ -82,6 +83,7 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
     ArticleController,
     FeatureController,
     AuthController,
+    UserCartController,
     
   ],
   providers: [AppService, 
