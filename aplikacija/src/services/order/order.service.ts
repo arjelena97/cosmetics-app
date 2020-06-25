@@ -44,16 +44,34 @@ export class OrderService {
                 newOrder.cartId = cartId;
                 const saveOrder = await this.order.save(newOrder);
 
-                return await this.order.findOne(saveOrder.orderId, {
-                    relations: [
-                        "cart",
-                        "cart.user",
-                        "cart.cartArticles",
-                        "cart.artArticle.article",
-                        "cartArticle.article.category",
-                        "cartArticle.article.articlePrices",
-                    ]
-                })
+                return await this.getById(saveOrder.orderId);
         }
+        async getById(orderId: number) {
+            return await this.order.findOne(orderId, {
+            relations: [
+                "cart",
+                "cart.user",
+                "cart.cartArticles",
+                "cart.artArticle.article",
+                "cartArticle.article.category",
+                "cartArticle.article.articlePrices",
+            ],
+        });
+}
+        async changeStatus(orderId: number, newStatus: "rejected"| "accepted" | "shipped" | "pending"){
+            const order = await this.getById(orderId);
+
+
+        if (!order) {
+            return new ApiResponse("error", -9001, "No such order found!");
+        }
+        
+        order.status = newStatus;
+
+        await this.order.save(order);
+
+        return await this.getById(orderId);
+
+}
 
 }
