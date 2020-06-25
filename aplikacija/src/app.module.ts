@@ -30,7 +30,9 @@ import { PhotoService } from './services/photo/photo.service';
 import { Photo } from 'src/entities/photo.entity';
 import { AuthMiddleware } from './middlewares/auth.middleware';
 import { UserCartController } from './controllers/api/user.cart.controller';
-
+import { MailerModule } from '@nestjs-modules/mailer';
+import { MailConfig } from 'config/mail.config';
+import { OrderMailer } from './services/order/order.mailer.service';
 
 
 
@@ -71,10 +73,18 @@ import { UserCartController } from './controllers/api/user.cart.controller';
       Order,
       ArticlePrice,
       Photo,
-      
+
   
     
-    ])
+    ]),
+    MailerModule.forRoot({
+      transport: 'smtps://' + MailConfig.username + ':' +
+                              MailConfig.password + '@' +
+                              MailConfig.hostname,
+      defaults: {
+        from: MailConfig.senderEmail,
+      },
+    }),
   ],
   controllers: [
     AppController, 
@@ -95,6 +105,7 @@ import { UserCartController } from './controllers/api/user.cart.controller';
     CartService,
     OrderService,
     PhotoService,
+    OrderMailer,
 
    
   ],
