@@ -29,6 +29,23 @@ INSERT INTO `administrator` (`administrator_id`, `username`, `password_hash`) VA
 	(133, 'noviadmin', 'FD9A354A81BA1402CD4889E6ECFCBF9E89D2BB53C7CEEB6CEC488C757D7F35BDFF63F09DA5416FD171094EB0E8C1219938B84F00DA596D435C3EBA513E005694');
 /*!40000 ALTER TABLE `administrator` ENABLE KEYS */;
 
+DROP TABLE IF EXISTS `administrator_token`;
+CREATE TABLE IF NOT EXISTS `administrator_token` (
+  `administrator_token_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `administrator_id` int unsigned NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `token` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `is_valid` tinyint unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`administrator_token_id`),
+  KEY `fk_administrator_token_administrator_id` (`administrator_id`),
+  CONSTRAINT `fk_administrator_token_administrator_id` FOREIGN KEY (`administrator_id`) REFERENCES `administrator` (`administrator_id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DELETE FROM `administrator_token`;
+/*!40000 ALTER TABLE `administrator_token` DISABLE KEYS */;
+/*!40000 ALTER TABLE `administrator_token` ENABLE KEYS */;
+
 DROP TABLE IF EXISTS `article`;
 CREATE TABLE IF NOT EXISTS `article` (
   `article_id` int unsigned NOT NULL AUTO_INCREMENT,
