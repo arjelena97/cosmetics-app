@@ -1,6 +1,6 @@
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { Repository, In } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Article } from "src/entities/article.entity";
 import { AddArticleDto } from 'src/dtos/article/add.article.dto';
@@ -8,6 +8,7 @@ import { ApiResponse } from 'src/misc/api.response.class';
 import { ArticlePrice } from 'src/entities/article-price.entity';
 import { ArticleFeature } from 'src/entities/article-feature.entity';
 import { EditArticleDto } from 'src/dtos/article/edit.article.dto';
+import { ArticleSearchDto } from 'src/dtos/article/article.search.dto';
 
 @Injectable()
 export class ArticleService extends TypeOrmCrudService<Article> {
@@ -108,7 +109,8 @@ export class ArticleService extends TypeOrmCrudService<Article> {
                     "category",
                     "articleFeatures",
                     "features",
-                    "articlePrices"
+                    "articlePrices",
+                    "photos"
                 ]
             });
         }
@@ -116,4 +118,100 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       
 
     }
+
+    async search(data: ArticleSearchDto): Promise<Article[]>{
+       const builder = await this.article.createQueryBuilder("article");
+       builder.where('article.categoryId = :catId', { catId: data.categoryId });
+
+        builder.leftJoinAndSelect("article.articleFeatures", "af");
+        builder.leftJoinAndSelect("article.features", "features");
+        builder.leftJoinAndSelect("article.photos", "photos");
+
+       if (data.keywords && data.keywords.length > 0) {
+           builder.andWhere(`(
+
+                               article.name LIKE :kw OR
+                               article.excerpt LIKE :kw OR
+                               article.description LIKE :kw
+
+                             )`,
+                             { kw: '%' + data.keywords.trim() + '%' });
+       }
+
+       if (data.priceMin && typeof data.priceMin === 'number') {
+        builder.andWhere('ap.price >= :min', { min: data.priceMin });
+        }
+
+        if (data.priceMax && typeof data.priceMax === 'number') {
+        builder.andWhere('ap.price <= :max', { max: data.priceMax });
+        }
+
+        if (data.features && data.features.length > 0) {
+            for (const feature of data.features) {
+                builder.andWhere(
+                    'af.featureId = :fId AND af.value IN (:fVals)',
+                    {
+                        fId: feature.featureId,
+                        fVals: feature.value,
+                    }
+                );
+            }
+        }
+
+        let orderBy = 'article.name';
+        let orderDirection: 'ASC' | 'DESC' = 'ASC';
+
+        if (data.orderBy) {
+            orderBy = data.orderBy;
+
+        }
+
+        if (orderBy === 'price') {
+            orderBy = 'ap.price';
+        }
+
+        if (orderBy === 'name') {
+            orderBy = 'article.name';
+        }
+
+        if (data.orderDirection) {
+            orderDirection = data.orderDirection;
+        }
+
+        builder.orderBy(orderBy, orderDirection);
+
+        let page = 0;
+        let perPage: 5 | 10 | 25 | 50  = 25;
+
+        if (data.page && typeof data.page === 'number') {
+            page = data.page;
+        }
+
+        if (data.itemsPerPage && typeof data.itemsPerPage === 'number') {
+            perPage = data.itemsPerPage;
+        }
+
+        builder.skip(page * perPage);
+        builder.take(perPage);
+
+        let articleIds = await ( await builder.getMany()).map(article => article.articleId);
+
+        return await this.article.find({
+            where: {
+                articleId: In(articleIds) 
+            },
+            relations: [
+                "category",
+                "articleFeatures",
+                "features",
+                "articlePrices",
+                "photos"
+            ]
+        })
+
+
+
+       
+    }
+
 }
