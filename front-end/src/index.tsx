@@ -25,10 +25,9 @@ ReactDOM.render(
   <React.StrictMode>
     <HashRouter>
       <Switch>
-      <Route exact path="/#" component ={ HomePage } />
+      <Route exact path="/" component ={ HomePage } />
          <Route exact path="/contact" component ={ ContactPage } />
          <Route exact path="/user/login" component ={ UserLoginPage } />
-         <Route exact path="/category/:id" component ={ CategoryPage } />
          <Route path="/user/register" component={ UserRegistrationPage } />
         <Route path="/category/:cId" component={ CategoryPage } />
         <Route path="/user/orders" component={ OrdersPage } />
