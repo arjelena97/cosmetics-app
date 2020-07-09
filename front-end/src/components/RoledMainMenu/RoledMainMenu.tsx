@@ -9,6 +9,7 @@ export default class RoledMainMenu extends React.Component<RoledMainMenuProperti
     render() {
         let items: MainMenuItem[] = [];
 
+
         switch (this.props.role) {
             case 'user':          items = this.getUserMenuItems(); break;
             case 'administrator': items = this.getAdministratorMenuItems(); break;
