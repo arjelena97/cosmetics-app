@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import HomePage from './components/HomePage/HomePage';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'jquery/dist/jquery.js';
@@ -12,19 +11,21 @@ import { HashRouter, Route } from 'react-router-dom';
 import Switch from 'react-bootstrap/esm/Switch';
 import { ContactPage } from './components/ContactPage/ContactPage';
 import { UserLoginPage } from './components/UserLoginPage/UserLoginPage';
-import CategoryPage from './components/CategoryPage/CateogoryPage';
+import CategoryPage from './components/CategoryPage/CategoryPage';
 import AdministratorLoginPage from './components/AdministratorLoginPage/AdministratorLoginPage';
-import OrdersPage from './OrdersPage/OrdersPage';
+import OrdersPage from './components/OrdersPage/OrdersPage';
 import { UserRegistrationPage } from './components/UserRegistrationPage/UserRegistrationPage';
 import AdministratorDashboardCategory from './components/AdministratorDashboardCategory/AdministratorDashboardcCategoryPage';
 import AdministratorDashboard from './components/AdministratorDashboard/AdministratorDashboard';
+import HomePage from './components/HomePage/HomePage';
+
 
 
 ReactDOM.render(
   <React.StrictMode>
     <HashRouter>
       <Switch>
-         <Route exact path="/" component ={ HomePage } />
+      <Route exact path="/#" component ={ HomePage } />
          <Route exact path="/contact" component ={ ContactPage } />
          <Route exact path="/user/login" component ={ UserLoginPage } />
          <Route exact path="/category/:id" component ={ CategoryPage } />

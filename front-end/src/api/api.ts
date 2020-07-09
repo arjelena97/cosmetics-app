@@ -81,7 +81,7 @@ async function responseHandler(
         data: res.data,
     };
     
-    return resolve(res.data);
+    return resolve(response);
 }
 
 function getToken(role: 'user' | 'administrator'): string {
